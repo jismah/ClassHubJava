@@ -320,12 +320,12 @@ public class Register extends javax.swing.JFrame {
            
             System.out.println("Se creo " + insertEstudiante + " usuario");
             
-            JOptionPane.showMessageDialog(null, "Haz creado tu cuenta exitosamente!",
+            JOptionPane.showMessageDialog(null, "Haz Creado Tu Cuenta, Ahora Ingresa",
   "Enhorabuena", JOptionPane.INFORMATION_MESSAGE);
             
             dispose();
-            Main main = new Main();
-            main.setVisible(true);
+            LoginClassHub login = new LoginClassHub();
+            login.setVisible(true);
             
             System.out.println("Estudiante y usuario creado!");
         } catch (SQLException ex) {

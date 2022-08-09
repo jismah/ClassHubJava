@@ -4,8 +4,21 @@
  */
 package Main;
 
+import BD.Conexion;
+import Logica.Core;
+import Logica.Period;
+import Logica.Student;
+import Logica.Subject;
+import Logica.Teacher;
 import Login.LoginClassHub;
+import java.awt.Color;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,8 +31,27 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
+        Student studentLogged = Core.getInstance().getDataUserStudentLogged(Core.getLoggedUser().getIdStudent());
         SetIcon();
         this.setLocationRelativeTo(null);
+        
+        pullDataProfesoresTable();
+        pullDataMateriasTable();
+        pullDataPeriodosTable();
+        
+        
+  
+        CarreraLbl.setText(Core.getInstance().getNameCarrera(Integer.parseInt(studentLogged.getIdCarrera())));
+        HomePanel.setVisible(true);
+        PeriodosPanel.setVisible(false);
+        MateriasPanel.setVisible(false);
+        ProfesoresPanel.setVisible(false);
+        BienvenidaLbl.setText("Bienvenido a ClassHub, " + studentLogged.getName() + "!");
+        MatriculaLbl.setText(studentLogged.getId());
+        Nombrelbl.setText(studentLogged.getName() + " " + studentLogged.getSurname());
+        EdadLbl.setText(Core.getInstance().getAge(studentLogged.getId()));
+        PeriodoLbl.setText("#"+Core.getInstance().getLastPeriod());
+        
     }
 
     /**
@@ -34,12 +66,11 @@ public class Main extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         NavbarPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        MenuLbl = new javax.swing.JLabel();
+        PeriodosLbl = new javax.swing.JLabel();
+        MateriasLbl = new javax.swing.JLabel();
+        ProfesoresLbl = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         jLabel9 = new javax.swing.JLabel();
         HomePanel = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -63,23 +94,51 @@ public class Main extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jPanel14 = new javax.swing.JPanel();
+        PeriodoLbl = new javax.swing.JLabel();
+        MateriasPeriodoSP = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel13 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
+        UniversidadLbl = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        Nombrelbl = new javax.swing.JLabel();
+        EdadLbl = new javax.swing.JLabel();
+        CarreraLbl = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        MatriculaLbl = new javax.swing.JLabel();
+        BienvenidaLbl = new javax.swing.JLabel();
+        MateriasPanel = new javax.swing.JPanel();
+        WelcomeMaterias = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        MateriasSP = new javax.swing.JScrollPane();
+        MateriasTable = new javax.swing.JTable();
+        ProfesoresPanel = new javax.swing.JPanel();
+        WelcomeProfesores = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        ProfesoresSP = new javax.swing.JScrollPane();
+        ProfesoresTable = new javax.swing.JTable();
+        PeriodosPanel = new javax.swing.JPanel();
+        WelcomePeriodos = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        PeriodosSP = new javax.swing.JScrollPane();
+        PeriodosTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        WelcomePeriodos1 = new javax.swing.JLabel();
+        BtnPrueba = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        newPeriodoBtn1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ClassHub");
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(1280, 720));
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -94,34 +153,54 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_gear_28px_1.png"))); // NOI18N
         jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        NavbarPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, 40, 60));
+        NavbarPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 0, 40, 60));
 
-        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Menú");
-        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        NavbarPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 0, 70, 60));
+        MenuLbl.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
+        MenuLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        MenuLbl.setText("Menú");
+        MenuLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MenuLblMouseClicked(evt);
+            }
+        });
+        NavbarPanel.add(MenuLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 0, 70, 60));
 
-        jLabel5.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(109, 109, 109));
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Periodos");
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        NavbarPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 0, 70, 60));
+        PeriodosLbl.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
+        PeriodosLbl.setForeground(new java.awt.Color(109, 109, 109));
+        PeriodosLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        PeriodosLbl.setText("Periodos");
+        PeriodosLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PeriodosLblMouseClicked(evt);
+            }
+        });
+        NavbarPanel.add(PeriodosLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 0, 70, 60));
 
-        jLabel6.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(109, 109, 109));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Materias");
-        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        NavbarPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 0, 70, 60));
+        MateriasLbl.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
+        MateriasLbl.setForeground(new java.awt.Color(109, 109, 109));
+        MateriasLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        MateriasLbl.setText("Materias");
+        MateriasLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MateriasLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MateriasLblMouseClicked(evt);
+            }
+        });
+        NavbarPanel.add(MateriasLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 0, 70, 60));
 
-        jLabel7.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(109, 109, 109));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Profesores");
-        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        NavbarPanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 0, 90, 60));
+        ProfesoresLbl.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 16)); // NOI18N
+        ProfesoresLbl.setForeground(new java.awt.Color(109, 109, 109));
+        ProfesoresLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ProfesoresLbl.setText("Profesores");
+        ProfesoresLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ProfesoresLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ProfesoresLblMouseClicked(evt);
+            }
+        });
+        NavbarPanel.add(ProfesoresLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 0, 90, 60));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_shutdown_28px.png"))); // NOI18N
@@ -131,15 +210,12 @@ public class Main extends javax.swing.JFrame {
                 jLabel8MouseClicked(evt);
             }
         });
-        NavbarPanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 0, 40, 60));
-
-        jSeparator1.setBackground(new java.awt.Color(84, 127, 255));
-        jSeparator1.setForeground(new java.awt.Color(84, 127, 255));
-        NavbarPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 70, -1));
+        NavbarPanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1230, 0, 40, 60));
 
         jLabel9.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 24)); // NOI18N
-        jLabel9.setText("Logo");
-        NavbarPanel.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 90, 60));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logoClassHub50px.png"))); // NOI18N
+        NavbarPanel.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 100, 60));
 
         jPanel1.add(NavbarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1310, 70));
 
@@ -246,7 +322,7 @@ public class Main extends javax.swing.JFrame {
         HomePanel.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 150, 260, 90));
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(225, 225, 225), 3, true));
+        jPanel12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(225, 225, 225), 1, true));
         jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel11.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
@@ -258,10 +334,33 @@ public class Main extends javax.swing.JFrame {
         jLabel25.setText("Periodo:");
         jPanel12.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
-        jLabel26.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
-        jLabel26.setText("#4");
-        jPanel12.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, -1));
-        jPanel12.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, 400, 160));
+        PeriodoLbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 18)); // NOI18N
+        PeriodoLbl.setText("#4");
+        jPanel12.add(PeriodoLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, -1));
+
+        jTable1.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Codigo", "Nombre", "Nota"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        MateriasPeriodoSP.setViewportView(jTable1);
+
+        jPanel12.add(MateriasPeriodoSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 410, 160));
 
         HomePanel.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 300, 560, 240));
 
@@ -273,37 +372,216 @@ public class Main extends javax.swing.JFrame {
         jLabel13.setText("Datos Personales");
         jPanel13.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 280, 40));
 
-        jLabel14.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
-        jLabel14.setText("Año de Inicio:");
-        jPanel13.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 190, -1, -1));
+        UniversidadLbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        UniversidadLbl.setText("PUCMM");
+        jPanel13.add(UniversidadLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 130, 140, -1));
 
-        jLabel22.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
-        jLabel22.setText("Nombre:");
-        jPanel13.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
-
-        jLabel23.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
-        jLabel23.setText("Apellido:");
-        jPanel13.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
-
-        jLabel24.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel24.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         jLabel24.setText("Edad:");
-        jPanel13.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, -1, -1));
+        jPanel13.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 50, -1));
 
-        jLabel27.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel27.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         jLabel27.setText("Universidad:");
-        jPanel13.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 70, -1, -1));
+        jPanel13.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 130, -1, -1));
 
-        jLabel28.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         jLabel28.setText("Carrera:");
-        jPanel13.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, -1, -1));
+        jPanel13.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 190, -1, -1));
+
+        jLabel29.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jLabel29.setText("Nombre:");
+        jPanel13.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
+
+        Nombrelbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        Nombrelbl.setText("nombre");
+        jPanel13.add(Nombrelbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 140, -1));
+
+        EdadLbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        EdadLbl.setText("nombre");
+        jPanel13.add(EdadLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, 140, -1));
+
+        CarreraLbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        CarreraLbl.setText("nombre");
+        jPanel13.add(CarreraLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, 180, -1));
+
+        jLabel30.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jLabel30.setText("Matricula:");
+        jPanel13.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 70, -1));
+
+        MatriculaLbl.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        MatriculaLbl.setText("nombre");
+        jPanel13.add(MatriculaLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, 350, -1));
 
         HomePanel.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 560, 240));
 
-        jLabel12.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
-        jLabel12.setText("Bienvenido a ClassHub, John!");
-        HomePanel.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 280, 50));
+        BienvenidaLbl.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
+        BienvenidaLbl.setText("Bienvenido a ClassHub");
+        HomePanel.add(BienvenidaLbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 420, 50));
 
         jPanel1.add(HomePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1310, 620));
+
+        MateriasPanel.setBackground(new java.awt.Color(255, 255, 255));
+        MateriasPanel.setMinimumSize(new java.awt.Dimension(1210, 540));
+        MateriasPanel.setPreferredSize(new java.awt.Dimension(1210, 540));
+        MateriasPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        WelcomeMaterias.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
+        WelcomeMaterias.setText("Materias");
+        MateriasPanel.add(WelcomeMaterias, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 420, 50));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_copybook_60px.png"))); // NOI18N
+        MateriasPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+
+        jLabel12.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel12.setText("Estas Son Listadas Dependiendo Tu Carrera");
+        MateriasPanel.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 280, 20));
+
+        MateriasSP.setBackground(new java.awt.Color(255, 255, 255));
+        MateriasSP.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+
+        MateriasTable.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+        MateriasTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Codigo", "Nombre", "Creditos"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        MateriasTable.setGridColor(new java.awt.Color(255, 255, 255));
+        MateriasSP.setViewportView(MateriasTable);
+
+        MateriasPanel.add(MateriasSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 1210, 450));
+
+        jPanel1.add(MateriasPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1310, 620));
+
+        ProfesoresPanel.setBackground(new java.awt.Color(255, 255, 255));
+        ProfesoresPanel.setMinimumSize(new java.awt.Dimension(1210, 540));
+        ProfesoresPanel.setPreferredSize(new java.awt.Dimension(1210, 540));
+        ProfesoresPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        WelcomeProfesores.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
+        WelcomeProfesores.setText("Profesores");
+        ProfesoresPanel.add(WelcomeProfesores, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 420, 50));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_classroom_60px.png"))); // NOI18N
+        ProfesoresPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 45, -1, -1));
+
+        jLabel14.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel14.setText("Listado De Profesores");
+        ProfesoresPanel.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 280, 20));
+
+        ProfesoresSP.setBackground(new java.awt.Color(255, 255, 255));
+        ProfesoresSP.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+
+        ProfesoresTable.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+        ProfesoresTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Apellido"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        ProfesoresTable.setGridColor(new java.awt.Color(255, 255, 255));
+        ProfesoresSP.setViewportView(ProfesoresTable);
+
+        ProfesoresPanel.add(ProfesoresSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 1210, 450));
+
+        jPanel1.add(ProfesoresPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1310, 620));
+
+        PeriodosPanel.setBackground(new java.awt.Color(255, 255, 255));
+        PeriodosPanel.setMinimumSize(new java.awt.Dimension(1210, 540));
+        PeriodosPanel.setPreferredSize(new java.awt.Dimension(1210, 540));
+        PeriodosPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        WelcomePeriodos.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
+        WelcomePeriodos.setText("Opciones");
+        PeriodosPanel.add(WelcomePeriodos, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 290, 190, 40));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8_deviation_60px.png"))); // NOI18N
+        PeriodosPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 45, -1, -1));
+
+        jLabel22.setFont(new java.awt.Font("Yu Gothic UI Semilight", 0, 14)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel22.setText("Opciones Para Manejar Tus Periodos");
+        PeriodosPanel.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, 280, 20));
+
+        PeriodosSP.setBackground(new java.awt.Color(255, 255, 255));
+        PeriodosSP.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+
+        PeriodosTable.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+        PeriodosTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID de Periodo", "# de Periodo", "Status del Periodo"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        PeriodosTable.setGridColor(new java.awt.Color(255, 255, 255));
+        PeriodosSP.setViewportView(PeriodosTable);
+
+        PeriodosPanel.add(PeriodosSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 760, 450));
+
+        jButton1.setBackground(new java.awt.Color(51, 153, 255));
+        jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jButton1.setText("Proximamente");
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 500, 190, 40));
+
+        WelcomePeriodos1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 20)); // NOI18N
+        WelcomePeriodos1.setText("Periodos");
+        PeriodosPanel.add(WelcomePeriodos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 420, 50));
+
+        BtnPrueba.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        BtnPrueba.setText("...");
+        BtnPrueba.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosPanel.add(BtnPrueba, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 230, 190, 40));
+
+        jButton3.setBackground(new java.awt.Color(51, 255, 102));
+        jButton3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jButton3.setText("Completado");
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 360, 190, 40));
+
+        jButton4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jButton4.setText("En Proceso");
+        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 430, 190, 40));
+
+        newPeriodoBtn1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        newPeriodoBtn1.setText("Nuevo Periodo");
+        newPeriodoBtn1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PeriodosPanel.add(newPeriodoBtn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 160, 190, 40));
+
+        jPanel1.add(PeriodosPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1310, 620));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1310, -1));
 
@@ -311,10 +589,66 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        dispose();
-        LoginClassHub login = new LoginClassHub();
-        login.setVisible(true);
+
+        int n = JOptionPane.showConfirmDialog(
+                null,
+                "Seguro que deseas salir?",
+                "Cerrar Sesion",
+                JOptionPane.YES_NO_OPTION);
+
+        if (n == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+
     }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void PeriodosLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PeriodosLblMouseClicked
+        HomePanel.setVisible(false);
+        PeriodosPanel.setVisible(true);
+        MateriasPanel.setVisible(false);
+        ProfesoresPanel.setVisible(false);
+
+        PeriodosLbl.setForeground(Color.black);
+        MenuLbl.setForeground(Color.GRAY);
+        MateriasLbl.setForeground(Color.GRAY);
+        ProfesoresLbl.setForeground(Color.GRAY);
+    }//GEN-LAST:event_PeriodosLblMouseClicked
+
+    private void MateriasLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MateriasLblMouseClicked
+        HomePanel.setVisible(false);
+        PeriodosPanel.setVisible(false);
+        MateriasPanel.setVisible(true);
+        ProfesoresPanel.setVisible(false);
+
+        PeriodosLbl.setForeground(Color.GRAY);
+        MenuLbl.setForeground(Color.GRAY);
+        MateriasLbl.setForeground(Color.BLACK);
+        ProfesoresLbl.setForeground(Color.GRAY);
+    }//GEN-LAST:event_MateriasLblMouseClicked
+
+    private void ProfesoresLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProfesoresLblMouseClicked
+        HomePanel.setVisible(false);
+        PeriodosPanel.setVisible(false);
+        MateriasPanel.setVisible(false);
+        ProfesoresPanel.setVisible(true);
+
+        PeriodosLbl.setForeground(Color.GRAY);
+        MenuLbl.setForeground(Color.GRAY);
+        MateriasLbl.setForeground(Color.GRAY);
+        ProfesoresLbl.setForeground(Color.BLACK);
+    }//GEN-LAST:event_ProfesoresLblMouseClicked
+
+    private void MenuLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuLblMouseClicked
+        HomePanel.setVisible(true);
+        PeriodosPanel.setVisible(false);
+        MateriasPanel.setVisible(false);
+        ProfesoresPanel.setVisible(false);
+
+        PeriodosLbl.setForeground(Color.GRAY);
+        MenuLbl.setForeground(Color.BLACK);
+        MateriasLbl.setForeground(Color.GRAY);
+        ProfesoresLbl.setForeground(Color.GRAY);
+    }//GEN-LAST:event_MenuLblMouseClicked
 
     /**
      * @param args the command line arguments
@@ -352,8 +686,37 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JLabel BienvenidaLbl;
+    private javax.swing.JButton BtnPrueba;
+    public javax.swing.JLabel CarreraLbl;
+    public javax.swing.JLabel EdadLbl;
     private javax.swing.JPanel HomePanel;
+    private javax.swing.JLabel MateriasLbl;
+    private javax.swing.JPanel MateriasPanel;
+    private javax.swing.JScrollPane MateriasPeriodoSP;
+    private javax.swing.JScrollPane MateriasSP;
+    private javax.swing.JTable MateriasTable;
+    public javax.swing.JLabel MatriculaLbl;
+    private javax.swing.JLabel MenuLbl;
     private javax.swing.JPanel NavbarPanel;
+    public javax.swing.JLabel Nombrelbl;
+    private javax.swing.JLabel PeriodoLbl;
+    private javax.swing.JLabel PeriodosLbl;
+    private javax.swing.JPanel PeriodosPanel;
+    private javax.swing.JScrollPane PeriodosSP;
+    private javax.swing.JTable PeriodosTable;
+    private javax.swing.JLabel ProfesoresLbl;
+    private javax.swing.JPanel ProfesoresPanel;
+    private javax.swing.JScrollPane ProfesoresSP;
+    private javax.swing.JTable ProfesoresTable;
+    public javax.swing.JLabel UniversidadLbl;
+    public javax.swing.JLabel WelcomeMaterias;
+    public javax.swing.JLabel WelcomePeriodos;
+    public javax.swing.JLabel WelcomePeriodos1;
+    public javax.swing.JLabel WelcomeProfesores;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -369,17 +732,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -387,16 +749,55 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JButton newPeriodoBtn1;
     // End of variables declaration//GEN-END:variables
 private void SetIcon() {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../img/logoClassHub.png")));
     }
+
+private void pullDataProfesoresTable(){
+    DefaultTableModel model = (DefaultTableModel) ProfesoresTable.getModel();
+    ArrayList<Teacher> list = Core.getInstance().getTeachers();
+    Object rowData[] = new Object[3];
+    for(int i = 0; i < list.size(); i++){
+        rowData[0] = list.get(i).getId();
+        rowData[1] = list.get(i).getName();
+        rowData[2] = list.get(i).getSurname();
+        model.addRow(rowData);
+    }
+}
+
+private void pullDataMateriasTable(){
+    DefaultTableModel model = (DefaultTableModel) MateriasTable.getModel();
+    ArrayList<Subject> list = Core.getInstance().getSubjects();
+    Object rowData[] = new Object[4];
+    for(int i = 0; i < list.size(); i++){
+        rowData[0] = list.get(i).getId();
+        rowData[1] = list.get(i).getCodSubject();
+        rowData[2] = list.get(i).getName();
+        rowData[3] = list.get(i).getCredits();
+        model.addRow(rowData);
+    }
+}
+
+private void pullDataPeriodosTable(){
+    DefaultTableModel model = (DefaultTableModel) PeriodosTable.getModel();
+    ArrayList<Period> list = Core.getInstance().getPeriods();
+    Object rowData[] = new Object[3];
+    for(int i = 0; i < list.size(); i++){
+        rowData[0] = list.get(i).getId();
+        rowData[1] = list.get(i).getNumPerCursado();
+        rowData[2] = list.get(i).getStatus();
+        model.addRow(rowData);
+    }
+}
+
+
 }

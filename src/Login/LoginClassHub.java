@@ -5,6 +5,9 @@
 package Login;
 
 import BD.Conexion;
+import Logica.Core;
+import Logica.Student;
+import Logica.User;
 import Main.Main;
 import Register.Register;
 import java.awt.Color;
@@ -28,6 +31,8 @@ public class LoginClassHub extends javax.swing.JFrame {
         initComponents();
         SetIcon();
         this.setLocationRelativeTo(null);
+        Core.getInstance().pullAllStudents();
+        Core.getInstance().pullAllTeachers();
     }
 
     /**
@@ -206,33 +211,47 @@ public class LoginClassHub extends javax.swing.JFrame {
         String user = UsuarioField.getText();
         String pass = new String(PassField.getPassword());
 
-        String url = "Select usuario, pass FROM Usuario WHERE usuario= '" + user + "'";
+        String query = "SELECT idUsuario, usuario, pass, idEstudiante FROM Usuario WHERE usuario = '" + user + "' ";
         try {
             Connection con = Conexion.getConexion();
-            PreparedStatement ps = con.prepareStatement(url);
+            PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String u = rs.getString("usuario");
                 String p = rs.getString("pass");
+                String i = rs.getString("idUsuario");
+                String e = rs.getString("idEstudiante");
 
                 if (pass.equals(p)) {
-                    System.out.print("Inicio de Sesion Correcto!");
-                    dispose();
-                    Main main = new Main();
-                    main.setVisible(true);
+                    User aux = new User(i, u, p, e);
+                    Core.getInstance().addUser(aux);
+                    if (Core.getInstance().validate(u, p)) {
+                        System.out.println("Usuario activo ahora es " + Core.getLoggedUser().getUsername());
+                        
+                        Student userStudentData = Core.getInstance().getDataUserStudentLogged(Core.getLoggedUser().getIdStudent());
+                        Core.getInstance().pullAllSubjects(userStudentData.getIdCarrera());
+                        Core.getInstance().pullPeriodosByIdStudent(userStudentData.getId());
+                        Core.getInstance().pullSubjectsXPeriodActive(userStudentData.getId());
+                        
+                        dispose();
+                        Main main = new Main();
+                        main.setVisible(true);
+                    }
+
                 } else {
-                    JOptionPane.showMessageDialog(null, "La contraseña es incorrecta!",
-  "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "La contraseña es incorrecta!", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    PassField.setText("");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Este Usuario no existe, revisa tus credenciales!",
-  "Error al ingresar", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Este Usuario no existe, revisa tus credenciales!", "Error al ingresar", JOptionPane.ERROR_MESSAGE);
+                UsuarioField.setText("");
+                PassField.setText("");
             }
-
         } catch (SQLException ex) {
             System.out.println(ex.toString());
         }
+//       
 
     }//GEN-LAST:event_IngresarButtonMouseClicked
 

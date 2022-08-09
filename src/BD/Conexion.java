@@ -10,8 +10,8 @@ public class Conexion {
 
         String conexionUrl = "jdbc:sqlserver://192.168.100.118:1433;"
                 + "database=ClassHubDev;"
-                + "user=jrodriguez;"
-                + "password=4Ec6b974cc*;"
+                + "user=abeato;"
+                + "password=ContrasenaBD123;"
                 + "loginTimeout+=30;"
                 + "trustServerCertificate=true";
 
